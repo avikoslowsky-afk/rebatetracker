@@ -1,0 +1,57 @@
+RebateHarbor - Multi-page Application Portal
+October 21, 2026
+
+WHAT IS BUILT
+A connected online application journey, not just a help-request landing page:
+/apply - application introduction and account sign-in
+/apply/[id]/details - applicant, property and utility details
+/apply/[id]/upgrade - equipment, project stage and rebate program details
+/apply/[id]/documents - private PDF, PNG and JPEG uploads
+/apply/[id]/review - final review, consent, submission and receipt
+/my-applications - saved drafts, submitted applications and status updates
+/team/applications - authorized reviewer queue, attached documents and customer-visible status notes
+
+The existing rebate finder, state resources, estimates, help pages and redesigned homepage remain available. Navigation and legacy /applications links now lead to Apply online.
+
+HOW IT WORKS
+Visitors sign in using the existing Sites ChatGPT sign-in flow. They can save and resume an application. Project data is saved in D1, with application-specific documents in private R2 storage. Upload limits: 10 MB per document, 24 documents per application. Accepted formats: PDF, PNG, JPEG, with basic file-signature checks. Files are downloaded as attachments and are not automatically scanned, parsed or verified.
+
+The applicant reviews and consents before sending the application to RebateHarbor. Submission requires contact/property/project details and at least one supporting file. The server saves a receipt and locks editing during review. The authorized reviewer can add notes, request information, or record progress. A request for more information reopens editing; the applicant can make changes and resubmit. Utility submission and approval statuses require a recorded reference and a customer-visible note. Status updates are team-recorded, not a live utility feed.
+
+PRIVACY AND ACCESS
+Public visitors cannot list applications or download their files. Every applicant API checks sign-in and application ownership. Team access is checked server-side against the runtime REBATE_TEAM_EMAIL setting. Team routes exclude private, unsubmitted drafts. Cross-origin mutations are rejected. Concurrent saves use a version check to avoid silently overwriting another window. File uploads check application status again when attaching the object.
+
+WHAT SUBMISSION MEANS
+The online form submits a full application and documents TO REBATEHARBOR for review. It does not submit an official utility application, sign for the applicant, reserve funding or promise a rebate. Official utility submission still needs the administrator's supported process and any required customer authorization. There is no payment collection or automatic email service.
+
+VERIFIED
+- TypeScript: passed.
+- Automated tests: 139 passed, zero failed.
+- Production Vinext build: passed.
+- New schema migration generated and applied to local D1.
+- Browser: sign-in, draft creation, details and upgrade page saves, private supporting-file upload, final review/consent and submission receipt.
+- Browser: team queue, uploaded-document listing, request for more information, customer dashboard update, applicant edit and resubmission.
+- Anonymous application, document and team API requests: rejected (401).
+- Forged identity headers on anonymous requests: rejected (401).
+- Cross-origin draft creation: rejected (403).
+- Mobile upload page visually reviewed. Desktop-specific browser sizing and native file-download behavior were not independently tested.
+
+PUBLICATION STATUS
+This update is NOT deployed. The environment rejected the Sites credential-input action under its approval policy, even after granting the repository and network permissions. The required source-sync step could not complete. The existing live site is unchanged.
+
+LAUNCH CONFIGURATION
+Keep the existing project ID: appgprj_6ab2ce7abb9481919ff82ac7f442481e
+Manifest bindings: d1 = DB, r2 = BUCKET.
+Set the private runtime REBATE_TEAM_EMAIL to the exact signed-in account email of the authorized reviewer. No public support email was invented. Submission is disabled until that review account is configured; drafts and uploads require the storage bindings.
+Apply both immutable drizzle migrations using the normal Sites publishing workflow. If connecting an already-populated database, reconcile its migration history first.
+Finish operator/contact, retention and removal details before accepting real personal documents. Public contact information can be added later as requested; paid services remain disabled.
+Then synchronize source using the Sites helper, package its matching Worker build, publish to the existing public site, and verify the production flow. Never use the local QA identity as a production reviewer.
+
+LOCAL DEVELOPMENT
+Node 22.13+ and the package.json pnpm version are required.
+pnpm install --frozen-lockfile
+pnpm check
+node --experimental-strip-types --test --test-isolation=none tests/*.test.mjs
+pnpm build
+pnpm dev
+Configure ignored .dev.vars for the local reviewer only. Apply local D1 migrations with Wrangler and persist-to .wrangler/state. Local test records, uploaded test files, .dev.vars, credentials, Git metadata and installed dependencies are excluded from the source archive.

@@ -1,0 +1,40 @@
+REBATEHARBOR — TRANSFER PACKAGE
+Prepared October 21, 2026 from the existing saved RebateHarbor project.
+
+RebateHarbor-Upload.zip
+This contains the rebuilt browser interface, calculator and rebate catalog.
+Extract it and upload its CONTENTS to a static web host; index.html belongs at
+the hosting root. No build command is needed for this ZIP. Serve over HTTP(S),
+not by double-clicking index.html. Use a host that supports single-page apps:
+unknown page paths should serve /index.html (HTTP 200). A _redirects file and
+copies for the main routes are included. Nested state links need SPA fallback.
+
+LIMITATIONS OF THE STATIC COPY
+Automatic address lookup calls /api/address-lookup and requires a server route;
+manual location/utility entry remains the fallback. Account sign-in, private
+document storage and any other server endpoints are not provided by static
+hosting. These files do not complete the proposed hosted D1 catalog upgrade.
+Browser-saved projects and documents are not in this ZIP and do not automatically
+move to a different domain. Export any important projects from the old browser
+before changing hosts. Rebate rates were preserved, not reverified for today.
+
+RebateHarbor-Source.zip
+Editable application source, catalog data, tests, lockfile and original build
+configuration. This is a Vinext/Cloudflare-oriented project, not a generic
+ready-to-deploy Next.js package. A developer should adapt backend routes,
+authentication, storage and deployment configuration to the destination host.
+Review package.json for original scripts and runtime requirements. Install
+dependencies using the pinned package manager in package.json.
+The .openai/hosting.json file identifies the ORIGINAL site; it is retained for
+reference. Do not use it to publish a new site. Original hosted credentials,
+node_modules, runtime state, build caches and browser data are not included.
+The export-tools scripts preserve the original preview process and expect its
+original outputs/efficiency-plus-calculator and work/calculator-preview layout;
+adjust their paths if rebuilding from this extracted source directory.
+
+VALIDATION
+The browser bundle was successfully rebuilt from the saved source. ZIP contents
+and essential assets were checked. Live browser testing on a new host has not
+been performed; local connection checks are denied by this execution environment.
+
+Your existing project files, original public URL and deployment were not changed.
